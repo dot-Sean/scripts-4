@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ $# = 1 ] || exit 1
+[ $# = 1 -o $# = 2 ] || exit 1
 
 ssh_do()
 {
@@ -13,11 +13,11 @@ TMPKH=`mktemp /tmp/knownhosts.XXXXXX`
 SSHOPTS="-o StrictHostkeyChecking=no -o UserKnownHostsFile=$TMPKH -o ForwardX11=no -o BatchMode=yes"
 NEWIPADDR=10.0.0.7$IDX
 NEWIPADDR_WIFI=10.0.1.7$IDX
-CURADDR=192.168.1.1
+CURADDR=${2:-192.168.1.1}
 REBOOT_TO=45
 TELNET_PROMPT='root@OpenWrt:/# '
 
-which expect || exit 1
+which expect >/dev/null || exit 1
 expect -<<EOF_MAIN
 spawn telnet $CURADDR
 expect "$TELNET_PROMPT"
@@ -136,4 +136,4 @@ ssh_do /etc/init.d/babeld enable
 ssh_do /etc/init.d/babeld start
 echo 'new packages installed'
 rm -f $TMPKH
-
+echo "DONE with index $IDX"
