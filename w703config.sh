@@ -7,7 +7,7 @@ ssh_do()
 	ssh $SSHOPTS root@$CURADDR "$*"
 }
 
-[ -d sshdata ] || mkdir sshdata
+[ -d localdata ] || mkdir localdata
 IDX=$1
 TMPKH=`mktemp /tmp/knownhosts.XXXXXX`
 SSHOPTS="-o StrictHostkeyChecking=no -o UserKnownHostsFile=$TMPKH -o ForwardX11=no -o BatchMode=yes"
@@ -62,9 +62,9 @@ EOF_MAIN
 echo 'unused services disabled'
 
 REMOTE_DSS_KEY=root@$CURADDR:/etc/dropbear/dropbear_dss_host_key
-LOCAL_DSS_KEY=sshdata/w703-$IDX.dropbear_dss_host_key
+LOCAL_DSS_KEY=localdata/w703-$IDX.dropbear_dss_host_key
 REMOTE_RSA_KEY=root@$CURADDR:/etc/dropbear/dropbear_rsa_host_key
-LOCAL_RSA_KEY=sshdata/w703-$IDX.dropbear_rsa_host_key
+LOCAL_RSA_KEY=localdata/w703-$IDX.dropbear_rsa_host_key
 if [ ! -f $LOCAL_DSS_KEY ]; then
 	scp $SSHOPTS $REMOTE_DSS_KEY $LOCAL_DSS_KEY # backup
 else
