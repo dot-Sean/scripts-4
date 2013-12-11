@@ -107,6 +107,7 @@ commit network
 
 set wireless.radio0.country=RU
 set wireless.radio0.disabled=0
+set wireless.radio0.txpower=0
 set wireless.@wifi-iface[0].ssid='w703'
 set wireless.@wifi-iface[0].encryption='psk2+tkip+aes'
 set wireless.@wifi-iface[0].key='netgear18'
