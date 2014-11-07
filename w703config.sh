@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ $# = 1 -o $# = 2 ] || exit 1
 
