@@ -16,6 +16,7 @@ while true; do
 		continue
 	fi
 	macaddr=`ip ne show $TARGET | cut -d' ' -f5`
+	[ "$macaddr" = "" ] && continue
 	echo "$TARGET on line with MAC address $macaddr"
 	index=`grep $macaddr $INDICES | cut -d' ' -f2`
 	if [ "$index" != "" ]; then
