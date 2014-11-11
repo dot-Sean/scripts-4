@@ -46,7 +46,7 @@ expect eof
 EOF_MAIN
 
 #[ $? -eq 0 ] || { echo 'telnet setup failed'; exit 1 }
-sleep 3
+sleep 5
 
 ssh_do <<EOF_MAIN
 sed -r -i 's/^root:[^:]+:/root:\$1\$VLhPnrgV\$lB7lKpFxbznCAtHT2fF2Z0:/' /etc/shadow
@@ -123,16 +123,16 @@ read -t $REBOOT_TO
 echo 'OK'
 CURADDR=$NEWIPADDR
 
+ssh_do sed -i.orig 's#http://downloads.openwrt.org/barrier_breaker/14.07/ar71xx/generic/packages/#http://10.0.0.254/openwrt_ar71xx/#' /etc/opkg.conf
 ssh_do opkg update
 ssh_do opkg install babeld
 ssh_do uci batch <<EOF_MAIN
-delete babeld.lan
-delete babeld.wlan
-set babeld.eth0=interface
-set babeld.wlan0=interface
-set babeld.eth0.ignore=false
-set babeld.wlan0.ignore=false
-set babeld.@general[0].local_server=33123
+set babeld.@interface[0].ifname=eth0
+delete babeld.@interface[0].ignore
+set babeld.@interface[1].ifname=wlan0
+delete babeld.@interface[1].ignore
+set babeld.@interface[2].enable_timestamps=true
+set babeld.@general[0].local_port=33123
 commit babeld
 EOF_MAIN
 ssh_do /etc/init.d/babeld enable
