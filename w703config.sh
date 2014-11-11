@@ -125,14 +125,16 @@ CURADDR=$NEWIPADDR
 
 ssh_do opkg update
 ssh_do opkg install babeld
-ssh_do uci delete babeld.lan
-ssh_do uci delete babeld.wlan
-ssh_do uci set babeld.eth0=interface
-ssh_do uci set babeld.wlan0=interface
-ssh_do uci set babeld.eth0.ignore=false
-ssh_do uci set babeld.wlan0.ignore=false
-ssh_do uci set babeld.@general[0].local_server=33123
-ssh_do uci commit babeld
+ssh_do uci batch <<EOF_MAIN
+delete babeld.lan
+delete babeld.wlan
+set babeld.eth0=interface
+set babeld.wlan0=interface
+set babeld.eth0.ignore=false
+set babeld.wlan0.ignore=false
+set babeld.@general[0].local_server=33123
+commit babeld
+EOF_MAIN
 ssh_do /etc/init.d/babeld enable
 ssh_do /etc/init.d/babeld start
 echo 'new packages installed'
