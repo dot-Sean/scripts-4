@@ -11,8 +11,8 @@ ssh_do()
 IDX=$1
 TMPKH=`mktemp /tmp/knownhosts.XXXXXX`
 SSHOPTS="-o StrictHostkeyChecking=no -o UserKnownHostsFile=$TMPKH -o ForwardX11=no -o BatchMode=yes"
-NEWIPADDR=10.0.0.7$IDX
-NEWIPADDR_WIFI=10.0.1.7$IDX
+NEWIPADDR=10.0.0.5$IDX
+NEWIPADDR_WIFI=10.0.1.5$IDX
 CURADDR=${2:-192.168.1.1}
 REBOOT_TO=45
 TELNET_PROMPT='root@OpenWrt:/# '
