@@ -11,13 +11,17 @@ ssh_do()
 IDX=$1
 TMPKH=`mktemp /tmp/knownhosts.XXXXXX`
 SSHOPTS="-o StrictHostkeyChecking=no -o UserKnownHostsFile=$TMPKH -o ForwardX11=no -o BatchMode=yes"
-NEWIPADDR=10.0.0.5$IDX
+NEWIPADDR=10.0.73.$IDX
+NEWNET=255.255.255.0
+NEWGATEWAY=10.0.73.254
+NEWRESOLVER=8.8.8.8
 NEWIPADDR_WIFI=10.0.1.5$IDX
+NEWNET_WIFI=255.255.255.0
 CURADDR=${2:-192.168.1.1}
 REBOOT_TO=45
 TELNET_PROMPT='root@OpenWrt:/# '
 
-which expect >/dev/null || exit 1
+which expect >/dev/null || exit 2
 expect -<<EOF_MAIN
 spawn telnet $CURADDR
 expect "$TELNET_PROMPT"
@@ -94,14 +98,14 @@ set dhcp.lan.ignore=1
 commit dhcp
 
 set network.lan.ipaddr='$NEWIPADDR'
-set network.lan.netmask='255.255.255.0'
-set network.lan.gateway='10.0.0.254'
-set network.lan.dns='10.0.0.254'
+set network.lan.netmask='$NEWNET'
+set network.lan.gateway='$NEWGATEWAY'
+set network.lan.dns='$NEWRESOLVER'
 
 set network.wlan=interface
 set network.wlan.proto=static
 set network.wlan.ipaddr='$NEWIPADDR_WIFI'
-set network.wlan.netmask='255.255.255.0'
+set network.wlan.netmask='$NEWNET_WIFI'
 delete network.lan.type
 commit network
 
@@ -123,7 +127,7 @@ read -t $REBOOT_TO
 echo 'OK'
 CURADDR=$NEWIPADDR
 
-ssh_do sed -i.orig 's#http://downloads.openwrt.org/barrier_breaker/14.07/ar71xx/generic/packages/#http://10.0.0.254/openwrt_ar71xx/#' /etc/opkg.conf
+ssh_do sed -i.orig "s#http://downloads.openwrt.org/barrier_breaker/14.07/ar71xx/generic/packages/#http://$NEWGATEWAY/openwrt_ar71xx/#" /etc/opkg.conf
 ssh_do opkg update
 ssh_do opkg install babeld
 ssh_do uci batch <<EOF_MAIN
