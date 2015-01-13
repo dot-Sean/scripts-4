@@ -21,6 +21,10 @@ CURADDR=${2:-192.168.1.1}
 REBOOT_TO=45
 TELNET_PROMPT='root@OpenWrt:/# '
 
+[ -s localdata/setvars.sh ] && . localdata/setvars.sh
+: ${CONF_COUNTRY:=UA}
+: ${CONF_TIMEZONE:=Europe/Kiev}
+
 which expect >/dev/null || exit 2
 expect -<<EOF_MAIN
 spawn telnet $CURADDR
@@ -86,7 +90,7 @@ echo 'SSH host keys processed'
 
 ssh_do uci batch <<EOF_MAIN
 set system.@system[0].hostname='w703-$IDX'
-set system.@system[0].timezone='MSK-4'
+set system.@system[0].timezone='$CONF_TIMEZONE'
 add system led
 set system.@led[0].sysfs='tp-link:blue:system'
 set system.@led[0].trigger=netdev
@@ -109,7 +113,7 @@ set network.wlan.netmask='$NEWNET_WIFI'
 delete network.lan.type
 commit network
 
-set wireless.radio0.country=RU
+set wireless.radio0.country=$CONF_COUNTRY
 set wireless.radio0.disabled=0
 set wireless.radio0.txpower=0
 set wireless.@wifi-iface[0].ssid='w703'
