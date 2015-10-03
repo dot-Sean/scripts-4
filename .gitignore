@@ -1,2 +1,4 @@
 localdata/*.dropbear_dss_host_key
 localdata/*.dropbear_rsa_host_key
+localdata/setvars.sh
+localdata/indices
