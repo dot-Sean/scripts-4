@@ -45,7 +45,7 @@ send "echo -n 'dTYAAACAJPbJCJwp4yGvVcGuKn9SZ5Dp2v+WXr2cSCr2hREf/gE/LheVlxTPjK1ya
 expect "$TELNET_PROMPT"
 send "echo -n '7AzIzLreTIwSHY0QNPZDCfUslxS0GW68mGYT6eLaGPmRaQedKPtsNHJbu7yjz543m5Aw' >> /etc/dropbear/authorized_keys\n"
 expect "$TELNET_PROMPT"
-send "echo 'jR0sxTBct9xj3NXkVndkWElRfPKq+07QP4ObMKk1lNw= infrastation@yandex.ru' >> /etc/dropbear/authorized_keys\n"
+send "echo 'jR0sxTBct9xj3NXkVndkWElRfPKq+07QP4ObMKk1lNw= denis@ovsienko.info' >> /etc/dropbear/authorized_keys\n"
 expect "$TELNET_PROMPT"
 send "> /etc/banner\n"
 expect "$TELNET_PROMPT"
@@ -53,7 +53,7 @@ send "/etc/init.d/dropbear reload && exit\n"
 expect eof
 EOF_MAIN
 
-#[ $? -eq 0 ] || { echo 'telnet setup failed'; exit 1 }
+[ $? -eq 0 ] || { echo 'telnet setup failed'; sleep 10; exit 1; }
 sleep 5
 
 ssh_do <<EOF_MAIN
